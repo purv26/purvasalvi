@@ -1,0 +1,58 @@
+import React,{useCallback,useState} from 'react'
+import { View,Text,SafeAreaView,TextInput,TouchableOpacity,Flatlist } from 'react-native'
+import {isEmpty}from 'validate.js'
+const App=(props)=>{const[list,setlist]=useState([])
+    const[value,setvalue]=useState(null)
+    const[filter_list,set_fliter_list]=useState([])
+    let filtered_array;
+    const setListValue=(value)=>{
+        let arr=[...list]
+        setlist([...arr,value])
+        console.warn("value",list)
+    }
+    const renderItem=({item})=>{
+        return(
+            <View style={{backgroundColor:'#ffffff',elevation:10,padding:10,margin:5}}>
+                <Text>{item}</Text>
+            </View>
+        )
+    }
+    const onChangeText=async(text)=>{
+        await setValue(text)
+        filtered_array=await list.filter((item)=>
+        item.toLowerCase()==text.toLowerCase())
+        console.warn('klll',filtered_array)
+        let arr=[...filtered_array]
+        set_fliter_list([...arr])
+        console.warn("fil",filter_list)
+
+
+    }
+    return(
+        <SafeAreaView style={{flex:1,padding:10,marginHorizontal:10}}>
+            <View style={{flexDirection:'row'}}>
+                <TextInput placeholder='Add Text' onChangeText={(text)=>onChangeText(text)}
+                style={{borderWidth:1,width:'70%',borderColor:'gray',padding:10}}>
+            
+                </TextInput>
+                <TouchableOpacity onPress={()=>setListValue(value)}
+                style={{alignItems:'center',marginStart:10,paddingHorizontal:20,backgroundColor:'#cccccc'}}>
+                    <Text style={{fontSize:30}}>+</Text>
+                </TouchableOpacity>
+
+            </View>
+            {isEmpty(filter_list)?
+            <View style={{padding:10,marginHorizontal:10}}>
+                <Flatlist data={list}
+                renderItem={renderItem}
+                />
+            </View>
+            :
+            <View style={{padding:10,marginHorizontal:10,backgroundColor:'#ffffff'}}>
+
+            </View>
+            }
+        </SafeAreaView>
+    )
+}
+export default App
